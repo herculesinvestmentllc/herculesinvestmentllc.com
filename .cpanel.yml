@@ -6,6 +6,8 @@ deployment:
     - export DEPLOYPATH=/home/hercules/public_html/
     - /bin/mkdir -p ${DEPLOYPATH}api
     - /bin/cp index.html ${DEPLOYPATH}
+    - /bin/mkdir -p ${DEPLOYPATH}assets
+    - /bin/cp -R assets/. ${DEPLOYPATH}assets/
     - /bin/cp api/contact.php api/.htaccess ${DEPLOYPATH}api/
     # Root .htaccess: swap only our marked block, keep cPanel's own lines.
     - /bin/touch ${DEPLOYPATH}.htaccess

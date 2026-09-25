@@ -1,0 +1,32 @@
+/* Breakpoints. Keep this file last. */
+/* ============ RESPONSIVE ============ */
+@media(max-width:1080px){
+  .nav-links{display:none}.burger{display:flex}
+  .hero-in{grid-template-columns:1fr;gap:46px}.hero{padding-top:140px}
+  
+  .about-grid,.story-grid,.ct-grid{grid-template-columns:1fr;gap:48px}
+  .srv-grid{grid-template-columns:1fr 1fr}
+  .values-grid,.vm-grid{grid-template-columns:1fr 1fr}
+  
+  .ft-grid{grid-template-columns:1fr 1fr}
+  
+  .ceo-panel{grid-template-columns:1fr}
+  .mini-grid,.mini-grid.mini-4,.proj-grid{grid-template-columns:1fr 1fr}
+  .proj-head{flex-direction:column;align-items:flex-start}
+  .inv-grid{grid-template-columns:1fr;gap:32px}
+}
+
+@media(max-width:640px){
+  .srv-grid,.values-grid,.vm-grid,.ft-grid{grid-template-columns:1fr}
+  .pf-grid{grid-template-columns:1fr;grid-auto-rows:74px}
+  .section{padding:84px 0}.page-head{padding:150px 0 54px}
+
+  .f-grid{grid-template-columns:1fr}
+  .mini-grid,.mini-grid.mini-4,.proj-grid{grid-template-columns:1fr}
+  
+  .hl{white-space:normal}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}

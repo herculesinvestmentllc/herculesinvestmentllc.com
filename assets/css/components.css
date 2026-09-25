@@ -1,0 +1,17 @@
+/* Footer and floating widgets. */
+/* ============ FOOTER ============ */
+footer{background:#081426;color:#B9C7DA;margin-top:120px;position:relative;overflow:hidden}
+footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.ft-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:44px;padding-block:84px 54px}
+.ft-brand p{font-size:13.5px;line-height:1.85;color:#8CA0BC;margin-top:18px;max-width:32ch}
+
+footer h5{font:600 10.5px 'Spline Sans Mono';letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.ft-links{display:grid;gap:12px}
+.ft-links a{color:#8CA0BC;font-size:13.5px;transition:color .3s,padding .3s;width:fit-content}
+.ft-links a:hover{color:var(--gold);padding-inline-start:6px}
+
+.ft-bot{border-top:1px solid rgba(255,255,255,.09);padding-block:26px 36px}
+.ft-row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center;font-size:12.5px}
+.ft-row a{color:#8CA0BC}.ft-row a:hover{color:var(--gold)}
+.ft-disc{font-size:10.5px;color:#5F7089;line-height:1.75;max-width:920px;margin-top:14px}
+
