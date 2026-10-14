@@ -1,0 +1,25 @@
+name: build
+
+# The site is served straight from the repo, so index.html must match src/.
+# This job fails a pull request whose committed index.html is stale, and
+# syntax-checks the scripts, so a broken build cannot be merged.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: index.html is up to date
+        run: node scripts/build.mjs --check
+      - name: index.html is CSP-safe
+        run: node scripts/check-csp.mjs
+      - name: JavaScript syntax
+        run: |
+          for f in assets/js/*.js; do node --check "$f"; done

@@ -33,7 +33,9 @@ commit on `refactor/modular-and-fixes`.
 - [x] Contact forms validate in the browser against the same rules the endpoint uses
       (name present, email shape, message at least five characters); the server still
       enforces them.
-- [ ] Consider a CSP-friendly check: the deployed CSP sets `script-src 'self'`, so keep
-      new scripts in `assets/js/` and avoid inline `<script>`/`on*=` handlers.
-- [ ] Add CI (no `.github/workflows` yet): at minimum run `node scripts/build.mjs --check`
-      on pull requests so a stale `index.html` cannot be merged.
+- [x] CSP is enforced by `scripts/check-csp.mjs`, run in CI: it fails the build if
+      `index.html` gains an inline `<script>` or an inline `on*=` handler, both of which
+      the deployed `script-src 'self'` would refuse. New scripts go in `assets/js/`.
+- [x] CI added in `.github/workflows/build.yml` (runs on pull requests and pushes to
+      `main`): `node scripts/build.mjs --check`, `node scripts/check-csp.mjs`, and
+      `node --check` on every file in `assets/js/`.
