@@ -1,7 +1,6 @@
 /* Contact forms: the Contact page form and the investor form on Home. */
 'use strict';
 const FORM_ENDPOINT='/api/contact.php';
-const formOpened=Date.now();
 const ERRTXT={net:'Could not send. Please try again or email us directly.',val:'Please check the highlighted fields.',rate:'Please wait a moment before sending again.'};
 
 function fieldValue(form,name){
@@ -25,7 +24,6 @@ function bindContactForm(form){
       interest:form.dataset.interest||fieldValue(form,'interest'),
       message:fieldValue(form,'message'),
       website:form.elements.website?form.elements.website.value:'',
-      elapsed:Date.now()-formOpened,
       lang:'en'
     };
     try{
