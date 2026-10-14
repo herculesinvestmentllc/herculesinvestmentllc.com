@@ -17,6 +17,16 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const HANDLER = /\son[a-z]+\s*=\s*["']/gi;
 // Inline <script> bodies: a <script> tag with no src attribute.
 const INLINE_SCRIPT = /<script\b(?![^>]*\bsrc=)[^>]*>/gi;
+// A <script> whose type is not a JavaScript MIME is a data block (JSON-LD, a
+// template, ...). CSP's script-src does not apply to it, so it is not a problem.
+const SCRIPT_TYPE = /\btype\s*=\s*["']([^"']*)["']/i;
+
+function isDataBlock(tag) {
+  const m = tag.match(SCRIPT_TYPE);
+  if (!m) return false;
+  const t = m[1].trim().toLowerCase();
+  return t !== 'module' && !t.includes('javascript') && t !== 'text/ecmascript';
+}
 
 // Returns a list of human-readable problems; empty means the HTML is CSP-safe.
 export function findProblems(html) {
@@ -25,8 +35,8 @@ export function findProblems(html) {
   const handlers = html.match(HANDLER);
   if (handlers) problems.push(`inline event handler(s): ${[...new Set(handlers.map(h => h.trim()))].join(', ')}`);
 
-  const inlineScripts = html.match(INLINE_SCRIPT);
-  if (inlineScripts) problems.push(`inline <script> without src: ${inlineScripts.length}`);
+  const inlineScripts = (html.match(INLINE_SCRIPT) || []).filter(tag => !isDataBlock(tag));
+  if (inlineScripts.length) problems.push(`inline <script> without src: ${inlineScripts.length}`);
 
   return problems;
 }

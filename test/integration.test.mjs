@@ -49,3 +49,27 @@ test('index.html has a no-JS fallback that reveals the sections', async () => {
   const html = await readFile(join(root, 'index.html'), 'utf8');
   assert.match(html, /<noscript>\s*<style>\.page\{display:block !important\}<\/style>\s*<\/noscript>/);
 });
+
+test('index.html carries the canonical URL and social meta', async () => {
+  const html = await readFile(join(root, 'index.html'), 'utf8');
+  assert.match(html, /<link rel="canonical" href="https:\/\/herculesinvestmentsllc\.com\/">/);
+  assert.match(html, /property="og:image" content="https:\/\/herculesinvestmentsllc\.com\/assets\/img\/og-cover\.png"/);
+  assert.match(html, /name="twitter:card" content="summary_large_image"/);
+});
+
+test('the JSON-LD Organization block is valid JSON', async () => {
+  const html = await readFile(join(root, 'index.html'), 'utf8');
+  const m = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  assert.ok(m, 'expected a JSON-LD block');
+  const data = JSON.parse(m[1]);
+  assert.equal(data['@type'], 'Organization');
+  assert.equal(data.url, 'https://herculesinvestmentsllc.com/');
+});
+
+test('the social preview image exists and is 1200x630', async () => {
+  const buf = await readFile(join(root, 'assets/img/og-cover.png'));
+  assert.equal(buf.subarray(1, 4).toString(), 'PNG', 'expected a PNG');
+  const width = buf.readUInt32BE(16);
+  const height = buf.readUInt32BE(20);
+  assert.deepEqual([width, height], [1200, 630]);
+});
