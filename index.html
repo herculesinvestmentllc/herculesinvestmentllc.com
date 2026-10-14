@@ -15,6 +15,10 @@
 <link rel="stylesheet" href="assets/css/pages.css">
 <link rel="stylesheet" href="assets/css/components.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
+<!-- Sections are .page{display:none} and JS reveals the active one. Without JS the
+     page would be blank, so show them all. Browsers ignore noscript content when
+     scripting is on, so this only applies to the no-JS case. -->
+<noscript><style>.page{display:block !important}</style></noscript>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
