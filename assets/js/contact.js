@@ -2,6 +2,7 @@
 'use strict';
 const FORM_ENDPOINT='/api/contact.php';
 const ERRTXT={net:'Could not send. Please try again or email us directly.',val:'Please check the highlighted fields.',rate:'Please wait a moment before sending again.'};
+const OKTXT='Thank you, your message has been received. We reply within one business day.';
 
 function fieldValue(form,name){
   const el=form.elements[name];
@@ -38,11 +39,11 @@ function validate(payload){
 }
 
 function bindContactForm(form){
-  const btn=$('button[type="submit"]',form),err=$('.form-err',form),ok=form.parentElement.querySelector('.form-ok');
-  const showError=kind=>{err.textContent=ERRTXT[kind];err.hidden=false;};
+  const btn=$('button[type="submit"]',form),err=$('.form-err',form),ok=form.parentElement.querySelector('.form-ok'),status=$('.sr-only[role="status"]',form);
+  const showError=kind=>{err.textContent=ERRTXT[kind];err.hidden=false;if(status)status.textContent=ERRTXT[kind];};
   form.addEventListener('submit',async e=>{
     e.preventDefault();
-    err.hidden=true;clearInvalid(form);
+    err.hidden=true;clearInvalid(form);if(status)status.textContent='';
     const payload={
       name:fieldValue(form,'name'),
       email:fieldValue(form,'email'),
@@ -66,7 +67,7 @@ function bindContactForm(form){
       else if(!r.ok)showError('net');
       else{
         const d=await r.json();
-        if(d&&d.ok){form.hidden=true;ok.classList.add('show');return;}
+        if(d&&d.ok){form.hidden=true;ok.classList.add('show');if(status)status.textContent=OKTXT;return;}
         showError('net');
       }
     }catch(_){showError('net');}

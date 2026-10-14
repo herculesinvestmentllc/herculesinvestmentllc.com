@@ -73,3 +73,22 @@ test('the social preview image exists and is 1200x630', async () => {
   const height = buf.readUInt32BE(20);
   assert.deepEqual([width, height], [1200, 630]);
 });
+
+test('every button in index.html declares a type', async () => {
+  // An implicit type="submit" inside a form would submit it by accident.
+  const html = await readFile(join(root, 'index.html'), 'utf8');
+  const buttons = html.match(/<button\b[^>]*>/gi) || [];
+  assert.ok(buttons.length > 0, 'expected buttons');
+  const missing = buttons.filter((b) => !/\btype\s*=/.test(b));
+  assert.deepEqual(missing, [], `buttons without a type: ${missing.join(', ')}`);
+});
+
+test('each contact form has a live region for its status message', async () => {
+  const html = await readFile(join(root, 'index.html'), 'utf8');
+  const forms = (html.match(/<form class="js-contact"/g) || []).length;
+  const alerts = (html.match(/role="alert"/g) || []).length;
+  const statuses = (html.match(/role="status" aria-live="polite"/g) || []).length;
+  assert.equal(forms, 2, 'expected two contact forms');
+  assert.equal(alerts, forms, 'each form needs a role="alert" error element');
+  assert.equal(statuses, forms, 'each form needs a role="status" live region');
+});
