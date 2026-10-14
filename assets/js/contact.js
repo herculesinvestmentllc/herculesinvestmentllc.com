@@ -26,13 +26,23 @@ function markInvalid(form,fields){
   if(els[0])els[0].focus();
 }
 
+// Same rules the endpoint enforces, checked before the round trip so an obviously
+// empty or malformed form never reaches the server. The server stays the authority.
+const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+function validate(payload){
+  const fields=[];
+  if(payload.name==='')fields.push('name');
+  if(payload.email===''||!EMAIL_RE.test(payload.email))fields.push('email');
+  if(payload.message.length<5)fields.push('message');
+  return fields;
+}
+
 function bindContactForm(form){
   const btn=$('button[type="submit"]',form),err=$('.form-err',form),ok=form.parentElement.querySelector('.form-ok');
   const showError=kind=>{err.textContent=ERRTXT[kind];err.hidden=false;};
   form.addEventListener('submit',async e=>{
     e.preventDefault();
     err.hidden=true;clearInvalid(form);
-    btn.classList.add('loading');btn.disabled=true;
     const payload={
       name:fieldValue(form,'name'),
       email:fieldValue(form,'email'),
@@ -42,6 +52,9 @@ function bindContactForm(form){
       website:form.elements.website?form.elements.website.value:'',
       lang:'en'
     };
+    const bad=validate(payload);
+    if(bad.length){showError('val');markInvalid(form,bad);return;}
+    btn.classList.add('loading');btn.disabled=true;
     try{
       const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
       if(r.status===422){

@@ -29,10 +29,11 @@ commit on `refactor/modular-and-fixes`.
 
 ## Later
 
-- [ ] Decide whether `Hercules LLC` / `Hercules Ecommerce` get their own artwork;
-      they currently reuse the shared `pat-re` / `pat-man` symbols.
-- [ ] The contact form's client-side validation is left to the server (the forms are
-      `novalidate`); the 422 path now marks fields, so consider matching checks in JS
-      to avoid the round trip.
+- [x] `Hercules LLC` / `Hercules Ecommerce` got their own artwork (`pat-llc`, `pat-ecom`).
+- [x] Contact forms validate in the browser against the same rules the endpoint uses
+      (name present, email shape, message at least five characters); the server still
+      enforces them.
 - [ ] Consider a CSP-friendly check: the deployed CSP sets `script-src 'self'`, so keep
       new scripts in `assets/js/` and avoid inline `<script>`/`on*=` handlers.
+- [ ] Add CI (no `.github/workflows` yet): at minimum run `node scripts/build.mjs --check`
+      on pull requests so a stale `index.html` cannot be merged.
