@@ -92,3 +92,19 @@ test('each contact form has a live region for its status message', async () => {
   assert.equal(alerts, forms, 'each form needs a role="alert" error element');
   assert.equal(statuses, forms, 'each form needs a role="status" live region');
 });
+
+test('the htaccess block is well-formed and self-marked', async () => {
+  const block = await readFile(join(root, 'deploy/root-htaccess-block.conf'), 'utf8');
+  const open = (block.match(/<IfModule\b/g) || []).length;
+  const close = (block.match(/<\/IfModule>/g) || []).length;
+  assert.equal(open, close, 'every <IfModule> must be closed');
+  assert.equal((block.match(/^# BEGIN hercules-security$/gm) || []).length, 1);
+  assert.equal((block.match(/^# END hercules-security$/gm) || []).length, 1);
+});
+
+test('the htaccess block enables compression and caching', async () => {
+  const block = await readFile(join(root, 'deploy/root-htaccess-block.conf'), 'utf8');
+  assert.match(block, /<IfModule mod_deflate\.c>[\s\S]*AddOutputFilterByType DEFLATE/);
+  assert.match(block, /<IfModule mod_expires\.c>[\s\S]*ExpiresActive On/);
+  assert.match(block, /ExpiresByType text\/css "access plus 1 day"/);
+});
