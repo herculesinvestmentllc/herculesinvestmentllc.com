@@ -69,8 +69,22 @@ if(PAGES.includes(initId))swap(initId);else setActiveNav('home');
 history.replaceState({page:current},'');
 
 /* ================= MOBILE MENU ================= */
-const burger=$('#burger');
-function closeMenu(){document.body.classList.remove('menu-open');burger.setAttribute('aria-expanded','false');}
-burger.addEventListener('click',()=>{const open=document.body.classList.toggle('menu-open');burger.setAttribute('aria-expanded',open);});
+const burger=$('#burger'),menu=$('#mobileMenu'),firstLink=$('#mobileMenu a');
+// While closed the menu is aria-hidden and inert, so its links stay out of the tab
+// order and the accessibility tree. Opening reverses both and moves focus inside.
+function closeMenu(){
+  if(!document.body.classList.contains('menu-open'))return;
+  document.body.classList.remove('menu-open');
+  burger.setAttribute('aria-expanded','false');
+  menu.setAttribute('aria-hidden','true');menu.setAttribute('inert','');
+  burger.focus();
+}
+function openMenu(){
+  document.body.classList.add('menu-open');
+  burger.setAttribute('aria-expanded','true');
+  menu.setAttribute('aria-hidden','false');menu.removeAttribute('inert');
+  firstLink.focus();
+}
+burger.addEventListener('click',()=>{document.body.classList.contains('menu-open')?closeMenu():openMenu();});
 $$('#mobileMenu a').forEach(a=>a.addEventListener('click',closeMenu));
 
