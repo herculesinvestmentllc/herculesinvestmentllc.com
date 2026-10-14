@@ -46,3 +46,18 @@ test('both problem kinds are reported together', () => {
   const problems = findProblems('<body onload="x()"><script>a()</script></body>');
   assert.equal(problems.length, 2);
 });
+
+test('a JSON-LD data block is not treated as an inline script', () => {
+  // CSP script-src does not apply to non-JavaScript script types.
+  const html = '<script type="application/ld+json">{"@type":"Organization"}</script>';
+  assert.deepEqual(findProblems(html), []);
+});
+
+test('a module script without src is still a problem', () => {
+  assert.equal(findProblems('<script type="module">import x</script>').length, 1);
+});
+
+test('a javascript-typed inline script is still a problem', () => {
+  assert.equal(findProblems('<script type="text/javascript">a()</script>').length, 1);
+  assert.equal(findProblems('<script type="application/javascript">a()</script>').length, 1);
+});
