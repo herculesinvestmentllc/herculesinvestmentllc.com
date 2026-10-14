@@ -72,6 +72,7 @@
 
 /* ============ PORTFOLIO ============ */
 
+.pf-fills{display:flex;gap:10px;flex-wrap:wrap;margin-top:34px}
 .pf-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:86px;grid-auto-flow:dense;gap:22px}
 .h-md{grid-row:span 4}.h-lg{grid-row:span 5}
 .pf-item{border-radius:18px;overflow:hidden;display:flex;flex-direction:column;background:var(--card-solid);border:1px solid var(--line2);transition:transform .45s var(--ease),box-shadow .45s,opacity .35s,border-color .45s}
