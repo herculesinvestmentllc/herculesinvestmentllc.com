@@ -2,3 +2,6 @@ api/config.php
 
 # Local agent notes, not part of the site.
 .openhands/
+
+# No dependencies today (the tests use the built-in runner); ignore them anyway.
+node_modules/
