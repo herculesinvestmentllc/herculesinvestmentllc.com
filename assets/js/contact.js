@@ -10,12 +10,28 @@ function fieldValue(form,name){
   return el.value.trim();
 }
 
+function clearInvalid(form){
+  $$('.is-invalid',form).forEach(el=>el.classList.remove('is-invalid'));
+  $$('[aria-invalid]',form).forEach(el=>el.removeAttribute('aria-invalid'));
+}
+// The 422 body lists the offending field names; mirror that on the inputs so the
+// "check the highlighted fields" message points at something. The mark clears as
+// soon as the visitor edits that field.
+function markInvalid(form,fields){
+  const els=fields.map(n=>form.elements[n]).filter(el=>el&&el.classList);
+  els.forEach(el=>{
+    el.classList.add('is-invalid');el.setAttribute('aria-invalid','true');
+    el.addEventListener('input',()=>{el.classList.remove('is-invalid');el.removeAttribute('aria-invalid');},{once:true});
+  });
+  if(els[0])els[0].focus();
+}
+
 function bindContactForm(form){
   const btn=$('button[type="submit"]',form),err=$('.form-err',form),ok=form.parentElement.querySelector('.form-ok');
   const showError=kind=>{err.textContent=ERRTXT[kind];err.hidden=false;};
   form.addEventListener('submit',async e=>{
     e.preventDefault();
-    err.hidden=true;
+    err.hidden=true;clearInvalid(form);
     btn.classList.add('loading');btn.disabled=true;
     const payload={
       name:fieldValue(form,'name'),
@@ -28,7 +44,11 @@ function bindContactForm(form){
     };
     try{
       const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-      if(r.status===422)showError('val');
+      if(r.status===422){
+        showError('val');
+        const d=await r.json().catch(()=>({}));
+        if(d&&Array.isArray(d.fields))markInvalid(form,d.fields);
+      }
       else if(r.status===429)showError('rate');
       else if(!r.ok)showError('net');
       else{
