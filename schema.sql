@@ -17,12 +17,3 @@ CREATE TABLE IF NOT EXISTS contact_messages (
   KEY idx_created (created_at),
   KEY idx_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS newsletter_subscribers (
-  id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  created_at  DATETIME     NOT NULL,
-  email       VARCHAR(190) NOT NULL,
-  ip          VARCHAR(45)      NULL,
-  PRIMARY KEY (id),
-  UNIQUE KEY uq_email (email)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
