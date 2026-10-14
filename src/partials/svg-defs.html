@@ -5,8 +5,8 @@
     <linearGradient id="g-tech" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#10294F"/><stop offset="1" stop-color="#1D4E89"/></linearGradient>
     <linearGradient id="g-en" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5C4318"/><stop offset="1" stop-color="#A8843C"/></linearGradient>
     <linearGradient id="g-fin" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14243D"/><stop offset="1" stop-color="#274067"/></linearGradient>
-    <linearGradient id="g-man" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#232C3A"/><stop offset="1" stop-color="#3A4657"/></linearGradient>
-    <linearGradient id="g-re" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1B2A44"/><stop offset="1" stop-color="#2E405F"/></linearGradient>
+    <linearGradient id="g-llc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0E1B2E"/><stop offset="1" stop-color="#1F3A5F"/></linearGradient>
+    <linearGradient id="g-ecom" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#123152"/><stop offset="1" stop-color="#0B2239"/></linearGradient>
     <linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D9B96F"/><stop offset="1" stop-color="#A8843C"/></linearGradient>
     <symbol id="pat-hc" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
       <rect width="400" height="300" fill="url(#g-hc)"/>
@@ -37,23 +37,32 @@
       </g>
       <polyline points="56,160 119,128 169,142 219,96 269,72 332,38" fill="none" stroke="#F3E3BC" stroke-width="2.5"/>
     </symbol>
-    <symbol id="pat-man" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
-      <rect width="400" height="300" fill="url(#g-man)"/>
-      <circle cx="160" cy="140" r="52" fill="none" stroke="#C9A55C" stroke-width="12" stroke-dasharray="13 11" opacity=".85"/>
-      <circle cx="160" cy="140" r="22" fill="none" stroke="#C9A55C" stroke-width="3"/>
-      <circle cx="285" cy="210" r="32" fill="none" stroke="rgba(243,227,188,.6)" stroke-width="9" stroke-dasharray="10 9"/>
-      <circle cx="285" cy="210" r="13" fill="none" stroke="rgba(243,227,188,.6)" stroke-width="2.5"/>
-    </symbol>
-    <symbol id="pat-re" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
-      <rect width="400" height="300" fill="url(#g-re)"/>
-      <g fill="none" stroke="rgba(201,165,92,.8)" stroke-width="2">
-        <rect x="52" y="120" width="58" height="140"/><rect x="128" y="70" width="66" height="190"/><rect x="212" y="140" width="54" height="120"/><rect x="284" y="95" width="64" height="165"/>
-      </g>
-      <g fill="rgba(243,227,188,.55)">
-        <rect x="140" y="88" width="10" height="10"/><rect x="160" y="88" width="10" height="10"/><rect x="140" y="112" width="10" height="10"/><rect x="296" y="112" width="10" height="10"/><rect x="318" y="112" width="10" height="10"/><rect x="66" y="138" width="9" height="9"/><rect x="86" y="138" width="9" height="9"/>
-      </g>
-      <line x1="20" y1="260" x2="380" y2="260" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
-    </symbol>
     <symbol id="sil" viewBox="0 0 200 220"><circle cx="100" cy="72" r="40"/><path d="M22 220c4-64 36-94 78-94s74 30 78 94z"/></symbol>
+    <symbol id="pat-llc" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+      <rect width="400" height="300" fill="url(#g-llc)"/>
+      <g fill="none" stroke="rgba(201,165,92,.45)" stroke-width="1.5">
+        <circle cx="200" cy="150" r="118"/><circle cx="200" cy="150" r="86"/><circle cx="200" cy="150" r="54"/>
+      </g>
+      <g fill="none" stroke="#C9A55C" stroke-width="3">
+        <path d="M200 150L200 42"/><path d="M200 150l78 45"/><path d="M200 150l-78 45"/>
+      </g>
+      <circle cx="200" cy="150" r="9" fill="#C9A55C"/>
+      <g fill="rgba(243,227,188,.75)"><circle cx="200" cy="42" r="5"/><circle cx="278" cy="195" r="5"/><circle cx="122" cy="195" r="5"/></g>
+      <g fill="rgba(255,255,255,.25)"><circle cx="80" cy="70" r="2.5"/><circle cx="330" cy="90" r="2.5"/><circle cx="300" cy="250" r="2.5"/><circle cx="96" cy="240" r="2.5"/></g>
+    </symbol>
+    <symbol id="pat-ecom" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+      <rect width="400" height="300" fill="url(#g-ecom)"/>
+      <g fill="none" stroke="rgba(201,165,92,.55)" stroke-width="2.4">
+        <path d="M52 96l32-14 32 14v34l-32 14-32-14z"/>
+        <path d="M284 96l32-14 32 14v34l-32 14-32-14z"/>
+        <path d="M168 196l32-14 32 14v34l-32 14-32-14z"/>
+      </g>
+      <g fill="none" stroke="rgba(201,165,92,.7)" stroke-width="1.8" stroke-dasharray="5 6">
+        <path d="M84 130v30h84"/><path d="M316 130v30h-84"/><path d="M200 150v46"/>
+      </g>
+      <g fill="#C9A55C"><circle cx="84" cy="96" r="4"/><circle cx="316" cy="96" r="4"/><circle cx="200" cy="196" r="4"/></g>
+      <path d="M40 60h44l14 74h150l20-52H92" fill="none" stroke="rgba(243,227,188,.6)" stroke-width="2.2" stroke-linejoin="round"/>
+      <g fill="rgba(243,227,188,.85)"><circle cx="120" cy="252" r="6"/><circle cx="214" cy="252" r="6"/></g>
+    </symbol>
   </defs>
 </svg>
