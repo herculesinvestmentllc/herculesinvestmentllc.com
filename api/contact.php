@@ -60,12 +60,12 @@ if (val($in, 'website', 200) !== '') {
     exit;
 }
 
-// --- SPAM: formu 2 saniyeden hizli doldurduysan bot'sun ---
-$elapsed = (int)(val($in, 'elapsed', 20) ?: 0);
-if ($elapsed > 0 && $elapsed < 2000) {
-    echo json_encode(['ok' => true]);
-    exit;
-}
+// Not: "formu 2 saniyeden hizli doldurduysan bot'sun" kontrolu kaldirildi.
+// Gonderim suresi istemciden gelir, bot onu istedigi gibi ayarlayabilir; bu yuzden
+// gercek bir botu durdurmuyordu. Buna karsilik otomatik doldurma + hizli gonderim
+// yapan gercek kullanicilarda mesaji kaydetmeden yutuyordu (kullanici basarili
+// gorurken hicbir kayit olusmuyordu). Kalan savunmalar: honeypot, IP throttle ve
+// saatlik genel sinir.
 
 $name     = val($in, 'name', 120);
 $email    = val($in, 'email', 190);

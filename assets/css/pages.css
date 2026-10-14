@@ -72,6 +72,7 @@
 
 /* ============ PORTFOLIO ============ */
 
+.pf-fills{display:flex;gap:10px;flex-wrap:wrap;margin-top:34px}
 .pf-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:86px;grid-auto-flow:dense;gap:22px}
 .h-md{grid-row:span 4}.h-lg{grid-row:span 5}
 .pf-item{border-radius:18px;overflow:hidden;display:flex;flex-direction:column;background:var(--card-solid);border:1px solid var(--line2);transition:transform .45s var(--ease),box-shadow .45s,opacity .35s,border-color .45s}
@@ -118,6 +119,8 @@
 .field textarea{min-height:112px;resize:vertical}
 .field select{padding-top:26px}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-soft)}
+.field input.is-invalid,.field select.is-invalid,.field textarea.is-invalid{border-color:var(--down);box-shadow:0 0 0 3px rgba(198,71,71,.14)}
+.field input.is-invalid+label,.field textarea.is-invalid+label,.field select.is-invalid+label{color:var(--down)}
 .field label{position:absolute;inset-inline-start:16px;top:15px;font:500 13px 'Archivo';color:var(--muted);pointer-events:none;transition:.25s var(--ease)}
 .field input:focus+label,.field input:not(:placeholder-shown)+label,.field textarea:focus+label,.field textarea:not(:placeholder-shown)+label,.field select:focus+label,.field select.filled+label{top:7px;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-text)}
 .field .sel-arr{position:absolute;top:50%;inset-inline-end:14px;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}

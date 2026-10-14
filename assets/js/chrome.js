@@ -41,29 +41,50 @@ function setActiveNav(id){$$('.nav-links a').forEach(a=>a.classList.toggle('on',
 function swap(id){pages.forEach(p=>p.classList.toggle('active',p.id==='page-'+id));current=id;setActiveNav(id);
   try{scrollTo({top:0,left:0,behavior:'instant'})}catch(e){scrollTo(0,0)}
   if(id==='home'&&window.net&&window.net.resize)window.net.resize();}
-function go(id){
+// mode: 'push' for a click (adds a history entry), 'none' when the browser has
+// already moved through history (popstate / hashchange). Pushing on every click is
+// what makes the Back button return to the previous page instead of leaving the site.
+function go(id,mode){
   if(!PAGES.includes(id))id='home';
   if(id===current){scrollTo({top:0,behavior:'smooth'});return;}
   closeMenu();
-  if(REDUCED){swap(id);history.replaceState(null,'','#'+id);return;}
+  const record=()=>{if(mode!=='none')history[mode==='push'?'pushState':'replaceState']({page:id},'','#'+id);};
+  if(REDUCED){swap(id);record();return;}
   if(animLock)return;animLock=true;
   wipe.classList.add('cover');
-  setTimeout(()=>{swap(id);history.replaceState(null,'','#'+id);
+  setTimeout(()=>{swap(id);record();
     requestAnimationFrame(()=>{wipe.classList.add('leave');wipe.classList.remove('cover');
       setTimeout(()=>{wipe.classList.remove('leave');animLock=false;},600);});
   },570);
 }
 document.addEventListener('click',e=>{
   const a=e.target.closest('[data-page]');
-  if(a){e.preventDefault();go(a.dataset.page);}
+  if(a){e.preventDefault();go(a.dataset.page,'push');}
 });
-addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(id&&PAGES.includes(id)&&id!==current)go(id);});
+// popstate drives Back/Forward; hashchange covers a hand-edited address bar.
+addEventListener('popstate',e=>{const id=(e.state&&e.state.page)||location.hash.slice(1)||'home';if(PAGES.includes(id))go(id,'none');});
+addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(id&&PAGES.includes(id)&&id!==current)go(id,'none');});
 const initId=location.hash.slice(1);
 if(PAGES.includes(initId))swap(initId);else setActiveNav('home');
+history.replaceState({page:current},'');
 
 /* ================= MOBILE MENU ================= */
-const burger=$('#burger');
-function closeMenu(){document.body.classList.remove('menu-open');burger.setAttribute('aria-expanded','false');}
-burger.addEventListener('click',()=>{const open=document.body.classList.toggle('menu-open');burger.setAttribute('aria-expanded',open);});
+const burger=$('#burger'),menu=$('#mobileMenu'),firstLink=$('#mobileMenu a');
+// While closed the menu is aria-hidden and inert, so its links stay out of the tab
+// order and the accessibility tree. Opening reverses both and moves focus inside.
+function closeMenu(){
+  if(!document.body.classList.contains('menu-open'))return;
+  document.body.classList.remove('menu-open');
+  burger.setAttribute('aria-expanded','false');
+  menu.setAttribute('aria-hidden','true');menu.setAttribute('inert','');
+  burger.focus();
+}
+function openMenu(){
+  document.body.classList.add('menu-open');
+  burger.setAttribute('aria-expanded','true');
+  menu.setAttribute('aria-hidden','false');menu.removeAttribute('inert');
+  firstLink.focus();
+}
+burger.addEventListener('click',()=>{document.body.classList.contains('menu-open')?closeMenu():openMenu();});
 $$('#mobileMenu a').forEach(a=>a.addEventListener('click',closeMenu));
 
