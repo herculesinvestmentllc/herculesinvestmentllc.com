@@ -1,0 +1,12 @@
+{
+  "name": "herculesinvestmentllc.com",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static site for herculesinvestmentllc.com. The site itself has no build step; the scripts/ tooling does.",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/build.mjs --check && node scripts/check-csp.mjs",
+    "test": "node --test"
+  }
+}

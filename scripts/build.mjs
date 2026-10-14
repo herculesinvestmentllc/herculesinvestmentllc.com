@@ -9,7 +9,7 @@
 //   node scripts/build.mjs --check  # fail if index.html is out of date
 //
 import { readFile, writeFile, readdir } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -20,7 +20,7 @@ const outPath = join(root, 'index.html');
 
 const INCLUDE = /^[ \t]*<!--\s*@include:\s*([\w.-]+)\s*-->[ \t]*$/gm;
 
-function render(shell, partials) {
+export function render(shell, partials) {
   const used = new Set();
   const out = shell.replace(INCLUDE, (_match, name) => {
     if (!(name in partials)) throw new Error(`Missing partial: ${name}`);
@@ -32,27 +32,36 @@ function render(shell, partials) {
   return out;
 }
 
-async function loadPartials() {
-  const names = await readdir(partialsDir);
+export async function loadPartials(dir = partialsDir) {
+  const names = await readdir(dir);
   const partials = {};
   for (const name of names) {
     if (!name.endsWith('.html')) continue;
-    partials[name] = await readFile(join(partialsDir, name), 'utf8');
+    partials[name] = await readFile(join(dir, name), 'utf8');
   }
   return partials;
 }
 
-const shell = await readFile(shellPath, 'utf8');
-const built = render(shell, await loadPartials());
+export async function build() {
+  const shell = await readFile(shellPath, 'utf8');
+  return render(shell, await loadPartials());
+}
 
-if (process.argv.includes('--check')) {
-  const current = await readFile(outPath, 'utf8');
-  if (current !== built) {
-    console.error('index.html is out of date — run: node scripts/build.mjs');
-    process.exit(1);
+// Only touch the filesystem when run as a script; importing this module for tests must
+// have no side effects.
+const invokedDirectly = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (invokedDirectly) {
+  const built = await build();
+
+  if (process.argv.includes('--check')) {
+    const current = await readFile(outPath, 'utf8');
+    if (current !== built) {
+      console.error('index.html is out of date — run: node scripts/build.mjs');
+      process.exit(1);
+    }
+    console.log('index.html is up to date.');
+  } else {
+    await writeFile(outPath, built);
+    console.log(`Built index.html (${built.length} bytes).`);
   }
-  console.log('index.html is up to date.');
-} else {
-  await writeFile(outPath, built);
-  console.log(`Built index.html (${built.length} bytes).`);
 }
