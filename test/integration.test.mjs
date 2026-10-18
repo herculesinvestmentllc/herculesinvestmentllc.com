@@ -2,7 +2,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile, mkdtemp, mkdir, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { loadPartials, build } from '../scripts/build.mjs';
@@ -60,9 +61,34 @@ test('hidden start states are scoped to html.js so content survives a failed scr
 
   // And the gate itself must be set before the body renders.
   const html = await readFile(join(root, 'index.html'), 'utf8');
-  assert.match(html, /<script src="assets\/js\/boot\.js"><\/script>/);
+  assert.match(html, /<script src="assets\/js\/boot\.js(\?v=[0-9a-f]+)?"><\/script>/);
   const boot = await readFile(join(root, 'assets/js/boot.js'), 'utf8');
   assert.match(boot, /classList\.add\('js'\)/);
+});
+
+test('every local asset reference carries a content hash', async () => {
+  // The CSS and JS filenames have no version, so a long cache would serve a stale
+  // stylesheet after a deploy (a moved logo, a hidden section) while the HTML is fresh.
+  // The build appends ?v=<hash of the file> so a changed file is a changed URL.
+  const html = await readFile(join(root, 'index.html'), 'utf8');
+  const refs = [...html.matchAll(/\b(?:href|src)="(assets\/[^"]+)"/g)].map((m) => m[1]);
+  assert.ok(refs.length >= 8, `expected the asset references, got ${refs.length}`);
+  const unversioned = refs.filter((r) => !/\?v=[0-9a-f]{10}$/.test(r));
+  assert.deepEqual(unversioned, [], `assets without a hash: ${unversioned.join(', ')}`);
+
+  // The hash must track the bytes: two different file bodies must yield two different
+  // URLs, otherwise a CSS edit would keep the old URL and stay cached.
+  const { versionAssets } = await import('../scripts/build.mjs');
+  const dir = await mkdtemp(join(tmpdir(), 'hv-'));
+  await mkdir(join(dir, 'assets/css'), { recursive: true });
+  const link = '<link href="assets/css/x.css">';
+  await writeFile(join(dir, 'assets/css/x.css'), 'a{}');
+  const first = await versionAssets(link, dir);
+  await writeFile(join(dir, 'assets/css/x.css'), 'b{}');
+  const second = await versionAssets(link, dir);
+  await rm(dir, { recursive: true, force: true });
+  assert.match(first, /\?v=[0-9a-f]{10}"/, 'a real file must get a hash');
+  assert.notEqual(first, second, 'different bytes must produce a different URL');
 });
 
 test('index.html carries the canonical URL and social meta', async () => {
