@@ -20,7 +20,9 @@
 <meta name="twitter:title" content="Hercules Investments LLC — E-commerce Brands, Built In-House">
 <meta name="twitter:description" content="A US-based e-commerce group building and scaling its own consumer brands.">
 <meta name="twitter:image" content="https://herculesinvestmentsllc.com/assets/img/og-cover.png">
-<link rel="icon" href="assets/img/hercules-mark.svg" type="image/svg+xml">
+<!-- The ?v= query makes the URL unique, so a browser that cached the previous mark
+     under the old long max-age fetches this one instead of showing the old icon. -->
+<link rel="icon" href="assets/img/hercules-mark.svg?v=2" type="image/svg+xml">
 <!-- Marks the document as scripted before the body renders. Every hidden start state
      in the CSS (.page, .rv, .uline, .tl-line) is scoped to html.js, so if this script
      is blocked or fails the content stays visible instead of a blank page. -->
