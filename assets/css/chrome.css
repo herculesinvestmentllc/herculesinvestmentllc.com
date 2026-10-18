@@ -59,10 +59,10 @@ body.menu-open .mm-link{opacity:1;transform:none}
 .mm-idx{font:600 11px 'Spline Sans Mono';color:var(--gold);letter-spacing:.2em}
 
 /* ============ PAGES / WIPE ============ */
-/* Hidden until JS marks the document as scripted (html.js, set by assets/js/boot.js).
-   Without JS every section stays in flow instead of only the active one, so the
-   content is readable rather than a blank page. */
-html.js .page{display:none}
+/* Hidden until JS marks the document as scripted. :where() keeps the gate at zero
+   specificity, so .page.active below still wins; a bare html.js .page would outrank
+   it (an extra type selector) and leave every section hidden. */
+:where(html.js) .page{display:none}
 .page.active{display:block;animation:pageIn .7s var(--ease)}
 @keyframes pageIn{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
 #wipe{position:fixed;inset:0;z-index:1500;pointer-events:none}
@@ -73,12 +73,12 @@ html.js .page{display:none}
 #wipe.cover .wipe-mark{opacity:1}
 
 /* ============ REVEAL ============ */
-/* The hidden start state is scoped to html.js, which the head script adds. If the
-   JavaScript never runs — scripts blocked, a failed request, a network that strips
-   them — the content stays visible instead of being stuck at opacity:0. This is the
-   same reason the hero underline and timeline line are scoped below. */
-html.js .rv{opacity:0;transform:translateY(30px);transition:opacity .9s var(--ease) var(--d,0s),transform .9s var(--ease) var(--d,0s)}
+/* The hidden start state is scoped to html.js, which the head script adds, so if the
+   JavaScript never runs the content stays visible. :where() keeps the gate at zero
+   specificity, so .rv.in (added by the IntersectionObserver) still wins; a bare
+   html.js .rv would outrank it and pin everything at opacity:0. */
+:where(html.js) .rv{opacity:0;transform:translateY(30px);transition:opacity .9s var(--ease) var(--d,0s),transform .9s var(--ease) var(--d,0s)}
 
-html.js .rv-scale{transform:scale(.94)}
+:where(html.js) .rv-scale{transform:scale(.94)}
 .rv.in{opacity:1;transform:none}
 
