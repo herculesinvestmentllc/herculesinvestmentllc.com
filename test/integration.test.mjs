@@ -48,16 +48,22 @@ test('hidden start states are scoped to html.js so content survives a failed scr
   // The reveal animation hides .page, .rv, the hero underline and the timeline line.
   // If those rules applied unconditionally, a blocked or failed JavaScript load would
   // leave the page blank with no way to recover. They must all be gated on html.js,
-  // which assets/js/boot.js adds synchronously in the head.
+  // which assets/js/boot.js adds synchronously in the head — and the gate must sit at
+  // zero specificity (:where), or the "show" rule (.page.active, .rv.in, ...) would lose
+  // to it and the content would stay hidden even with JS running. That bug shipped once.
   const css = (await Promise.all(
     ['base', 'chrome', 'home', 'pages', 'components', 'responsive']
       .map((n) => readFile(join(root, `assets/css/${n}.css`), 'utf8'))
   )).join('\n');
 
-  assert.match(css, /html\.js \.page\{display:none\}/, '.page must hide only under html.js');
-  assert.match(css, /html\.js \.rv\{/, '.rv must hide only under html.js');
-  assert.match(css, /html\.js \.uline path\{/, '.uline must hide only under html.js');
-  assert.match(css, /html\.js \.tl-line\{/, '.tl-line must hide only under html.js');
+  assert.match(css, /:where\(html\.js\) \.page\{display:none\}/, '.page must hide only under html.js');
+  assert.match(css, /:where\(html\.js\) \.rv\{/, '.rv must hide only under html.js');
+  assert.match(css, /:where\(html\.js\) \.uline path\{/, '.uline must hide only under html.js');
+  assert.match(css, /:where\(html\.js\) \.tl-line\{/, '.tl-line must hide only under html.js');
+
+  // A bare `html.js .x` would outrank `.x.y`, so no gate may use it.
+  const bare = css.match(/^html\.js \.[^{]+/gm);
+  assert.deepEqual(bare, null, `gate must use :where(html.js), found: ${bare && bare.join(', ')}`);
 
   // And the gate itself must be set before the body renders.
   const html = await readFile(join(root, 'index.html'), 'utf8');

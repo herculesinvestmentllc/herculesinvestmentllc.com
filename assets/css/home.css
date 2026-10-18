@@ -21,9 +21,9 @@
 .hl{position:relative;display:inline-block;font-style:italic;color:var(--gold-text);white-space:nowrap}
 .uline{position:absolute;left:0;right:0;bottom:-10px;width:100%;height:14px}
 .uline path{fill:none;stroke:var(--gold);stroke-width:3.4;stroke-linecap:round;stroke-dasharray:330}
-/* Hidden start state only when JS runs; see html.js in chrome.css. Without it the
-   stroke stays at the default dashoffset:0, so the underline is simply drawn. */
-html.js .uline path{stroke-dashoffset:330}
+/* Hidden start state only when JS runs; :where() keeps it at zero specificity so
+   .rv.in below still wins. Without JS the dashoffset stays 0, so the line is drawn. */
+:where(html.js) .uline path{stroke-dashoffset:330}
 .rv.in .uline path{stroke-dashoffset:0;transition:stroke-dashoffset 1.2s var(--ease) .8s}
 .hero-sub{margin-top:28px;max-width:52ch;color:var(--muted);font-size:1.05rem;line-height:1.78}
 .hero-cta{margin-top:38px;display:flex;gap:16px;flex-wrap:wrap}
