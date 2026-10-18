@@ -17,7 +17,9 @@
 .story-text p{color:var(--ink2);line-height:1.9;margin-bottom:22px;font-size:1.02rem}
 .story-text p:first-child::first-letter{font:600 3.6rem/.8 'Fraunces';color:var(--gold-text);float:left;margin:8px 12px 0 0}
 .timeline{position:relative;padding-inline-start:42px}
-.tl-line{position:absolute;inset-block:8px;inset-inline-start:6px;width:2px;background:linear-gradient(var(--gold),var(--line));transform:scaleY(0);transform-origin:top;transition:transform 1.8s var(--ease) .2s}
+.tl-line{position:absolute;inset-block:8px;inset-inline-start:6px;width:2px;background:linear-gradient(var(--gold),var(--line));transform-origin:top;transition:transform 1.8s var(--ease) .2s}
+/* Hidden start state only when JS runs; see html.js in chrome.css. */
+html.js .tl-line{transform:scaleY(0)}
 .timeline.in .tl-line{transform:scaleY(1)}
 .tl-item{position:relative;padding-bottom:30px}
 .tl-dot{position:absolute;inset-inline-start:-42px;top:3px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:3px solid var(--gold);box-shadow:0 0 0 4px var(--gold-soft)}

@@ -7,13 +7,14 @@ deployment:
     - /bin/mkdir -p ${DEPLOYPATH}api
     - /bin/cp index.html ${DEPLOYPATH}
     - /bin/cp robots.txt sitemap.xml 404.html ${DEPLOYPATH}
-    - /bin/mkdir -p ${DEPLOYPATH}assets/css ${DEPLOYPATH}assets/js ${DEPLOYPATH}assets/img
+    - /bin/mkdir -p ${DEPLOYPATH}assets/css ${DEPLOYPATH}assets/js ${DEPLOYPATH}assets/img ${DEPLOYPATH}assets/fonts
     # Publish only the asset folders the page loads, so a stray file dropped into
     # assets/ (a .psd, a note, a backup) cannot reach public_html by accident.
     # The "src/." form copies the contents, so a redeploy does not nest a copy.
     - /bin/cp -R assets/css/. ${DEPLOYPATH}assets/css/
     - /bin/cp -R assets/js/. ${DEPLOYPATH}assets/js/
     - /bin/cp -R assets/img/. ${DEPLOYPATH}assets/img/
+    - /bin/cp -R assets/fonts/. ${DEPLOYPATH}assets/fonts/
     - /bin/cp api/contact.php api/.htaccess ${DEPLOYPATH}api/
     # Root .htaccess: swap only our marked block, keep cPanel's own lines.
     - /bin/touch ${DEPLOYPATH}.htaccess

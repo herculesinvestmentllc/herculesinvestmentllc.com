@@ -43,19 +43,26 @@ test('loadPartials reads every src/partials/*.html', async () => {
   assert.ok('nav.html' in partials, 'nav.html should be present');
 });
 
-test('index.html has a no-JS fallback that reveals the sections and their content', async () => {
-  // Sections are .page{display:none} until JS adds .active, and reveal blocks (.rv)
-  // start at opacity:0 until the IntersectionObserver adds .in; the hero underline and
-  // timeline line start hidden too. Without undoing all of those the page is blank or
-  // empty when scripting is off. Guard each one in the shell's noscript block.
+test('hidden start states are scoped to html.js so content survives a failed script', async () => {
+  // The reveal animation hides .page, .rv, the hero underline and the timeline line.
+  // If those rules applied unconditionally, a blocked or failed JavaScript load would
+  // leave the page blank with no way to recover. They must all be gated on html.js,
+  // which assets/js/boot.js adds synchronously in the head.
+  const css = (await Promise.all(
+    ['base', 'chrome', 'home', 'pages', 'components', 'responsive']
+      .map((n) => readFile(join(root, `assets/css/${n}.css`), 'utf8'))
+  )).join('\n');
+
+  assert.match(css, /html\.js \.page\{display:none\}/, '.page must hide only under html.js');
+  assert.match(css, /html\.js \.rv\{/, '.rv must hide only under html.js');
+  assert.match(css, /html\.js \.uline path\{/, '.uline must hide only under html.js');
+  assert.match(css, /html\.js \.tl-line\{/, '.tl-line must hide only under html.js');
+
+  // And the gate itself must be set before the body renders.
   const html = await readFile(join(root, 'index.html'), 'utf8');
-  const m = html.match(/<noscript>\s*<style>([\s\S]*?)<\/style>\s*<\/noscript>/);
-  assert.ok(m, 'expected a noscript <style> fallback in index.html');
-  const css = m[1];
-  assert.match(css, /\.page\{display:block !important\}/, 'sections must be shown');
-  assert.match(css, /\.rv\{opacity:1;transform:none\}/, 'reveal blocks must be visible');
-  assert.match(css, /\.uline path\{stroke-dashoffset:0\}/, 'hero underline must be drawn');
-  assert.match(css, /\.tl-line\{transform:scaleY\(1\)\}/, 'timeline line must be drawn');
+  assert.match(html, /<script src="assets\/js\/boot\.js"><\/script>/);
+  const boot = await readFile(join(root, 'assets/js/boot.js'), 'utf8');
+  assert.match(boot, /classList\.add\('js'\)/);
 });
 
 test('index.html carries the canonical URL and social meta', async () => {
