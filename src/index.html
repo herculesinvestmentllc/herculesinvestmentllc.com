@@ -30,10 +30,12 @@
 <link rel="stylesheet" href="assets/css/pages.css">
 <link rel="stylesheet" href="assets/css/components.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
-<!-- Sections are .page{display:none} and JS reveals the active one. Without JS the
-     page would be blank, so show them all. Browsers ignore noscript content when
-     scripting is on, so this only applies to the no-JS case. -->
-<noscript><style>.page{display:block !important}</style></noscript>
+<!-- Sections are .page{display:none} and JS reveals the active one. Reveal blocks
+     (.rv) start at opacity:0 and the hero underline / timeline line start hidden,
+     all of them opened by JS. Without JS the page would be blank, so undo each of
+     those. Browsers ignore noscript content when scripting is on, so this only
+     applies to the no-JS case. -->
+<noscript><style>.page{display:block !important}.rv{opacity:1;transform:none}.uline path{stroke-dashoffset:0}.tl-line{transform:scaleY(1)}</style></noscript>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Organization","name":"Hercules Investments LLC","url":"https://herculesinvestmentsllc.com/","logo":"https://herculesinvestmentsllc.com/assets/img/hercules-mark.svg","description":"A US-based e-commerce group building and scaling its own consumer brands.","email":"info@herculesllc.net"}
 </script>

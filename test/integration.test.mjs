@@ -43,11 +43,19 @@ test('loadPartials reads every src/partials/*.html', async () => {
   assert.ok('nav.html' in partials, 'nav.html should be present');
 });
 
-test('index.html has a no-JS fallback that reveals the sections', async () => {
-  // Sections are .page{display:none} until JS adds .active; without this the page
-  // is blank when scripting is off. Guard against it being dropped from the shell.
+test('index.html has a no-JS fallback that reveals the sections and their content', async () => {
+  // Sections are .page{display:none} until JS adds .active, and reveal blocks (.rv)
+  // start at opacity:0 until the IntersectionObserver adds .in; the hero underline and
+  // timeline line start hidden too. Without undoing all of those the page is blank or
+  // empty when scripting is off. Guard each one in the shell's noscript block.
   const html = await readFile(join(root, 'index.html'), 'utf8');
-  assert.match(html, /<noscript>\s*<style>\.page\{display:block !important\}<\/style>\s*<\/noscript>/);
+  const m = html.match(/<noscript>\s*<style>([\s\S]*?)<\/style>\s*<\/noscript>/);
+  assert.ok(m, 'expected a noscript <style> fallback in index.html');
+  const css = m[1];
+  assert.match(css, /\.page\{display:block !important\}/, 'sections must be shown');
+  assert.match(css, /\.rv\{opacity:1;transform:none\}/, 'reveal blocks must be visible');
+  assert.match(css, /\.uline path\{stroke-dashoffset:0\}/, 'hero underline must be drawn');
+  assert.match(css, /\.tl-line\{transform:scaleY\(1\)\}/, 'timeline line must be drawn');
 });
 
 test('index.html carries the canonical URL and social meta', async () => {
