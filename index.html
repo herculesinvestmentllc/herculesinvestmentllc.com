@@ -21,21 +21,20 @@
 <meta name="twitter:description" content="A US-based e-commerce group building and scaling its own consumer brands.">
 <meta name="twitter:image" content="https://herculesinvestmentsllc.com/assets/img/og-cover.png">
 <link rel="icon" href="assets/img/hercules-mark.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Archivo:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+<!-- Marks the document as scripted before the body renders. Every hidden start state
+     in the CSS (.page, .rv, .uline, .tl-line) is scoped to html.js, so if this script
+     is blocked or fails the content stays visible instead of a blank page. -->
+<script src="assets/js/boot.js"></script>
+<link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/chrome.css">
 <link rel="stylesheet" href="assets/css/home.css">
 <link rel="stylesheet" href="assets/css/pages.css">
 <link rel="stylesheet" href="assets/css/components.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
-<!-- Sections are .page{display:none} and JS reveals the active one. Reveal blocks
-     (.rv) start at opacity:0 and the hero underline / timeline line start hidden,
-     all of them opened by JS. Without JS the page would be blank, so undo each of
-     those. Browsers ignore noscript content when scripting is on, so this only
-     applies to the no-JS case. -->
-<noscript><style>.page{display:block !important}.rv{opacity:1;transform:none}.uline path{stroke-dashoffset:0}.tl-line{transform:scaleY(1)}</style></noscript>
+<!-- Every hidden start state (.page, .rv, .uline, .tl-line) is scoped to html.js, which
+     assets/js/boot.js adds. So with scripting off nothing is hidden and the sections
+     simply stack; no noscript override is needed. -->
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Organization","name":"Hercules Investments LLC","url":"https://herculesinvestmentsllc.com/","logo":"https://herculesinvestmentsllc.com/assets/img/hercules-mark.svg","description":"A US-based e-commerce group building and scaling its own consumer brands.","email":"info@herculesllc.net"}
 </script>
