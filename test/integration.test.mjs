@@ -143,10 +143,21 @@ test('the favicon version lives in the filename, not just the query', async () =
   await readFile(join(root, href.replace(/\?.*$/, '')), 'utf8');
 });
 
-test('the 404 page uses the brand palette, not the old navy', async () => {
+test('the brand mark is gold on navy, in the favicon and the nav', async () => {
+  // Gold (#C9A55C) on navy (#0B1F3A) is the house mark. A previous change made it olive
+  // and that was wrong, so pin the colours here to keep it from drifting again.
+  const svg = await readFile(join(root, 'assets/img/hercules-mark-v3.svg'), 'utf8');
+  assert.match(svg, /fill="#0B1F3A"/, 'the mark background must be navy');
+  assert.match(svg, /stroke="#C9A55C"/, 'the mark glyph must be gold');
+
+  const css = await readFile(join(root, 'assets/css/chrome.css'), 'utf8');
+  assert.match(css, /\.brand-mark\{[^}]*color:#C9A55C/, 'the nav logo must be gold');
+});
+
+test('the 404 page uses the navy-and-gold brand palette', async () => {
   const html = await readFile(join(root, '404.html'), 'utf8');
-  assert.match(html, /--bg2:#4F5943/, 'the 404 page must use the olive brand colour');
-  assert.doesNotMatch(html, /--bg:#0B1F3A/, 'the 404 page must not use the old navy');
+  assert.match(html, /--bg:#0B1F3A/, 'the 404 page must use the navy brand colour');
+  assert.match(html, /stroke="#C9A55C"/, 'the 404 mark must be gold');
   assert.match(html, /hercules-mark-v\d+\.svg/, 'the 404 favicon must be the versioned mark');
 });
 
