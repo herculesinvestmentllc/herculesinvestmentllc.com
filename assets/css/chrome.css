@@ -81,4 +81,10 @@ body.menu-open .mm-link{opacity:1;transform:none}
 
 :where(html.js) .rv-scale{transform:scale(.94)}
 .rv.in{opacity:1;transform:none}
+/* Failsafe: boot.js sets .no-anim if the reveal script has not started within two
+   seconds (a blocked, slow or hung request). Without it a page whose scripts never
+   finish would sit at opacity:0 forever, which reads as "spins but never opens".
+   This only lifts the hidden start state; the reveal animation still runs normally. */
+:where(html.js.no-anim) .rv{opacity:1;transform:none}
+:where(html.js.no-anim) .rv-scale{transform:none}
 

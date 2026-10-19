@@ -1,6 +1,9 @@
 /* Reveal and hero network canvas. */
 'use strict';
 /* ================= REVEAL ================= */
+// boot.js armed a failsafe that unhides everything if the reveal never starts. It has
+// started now, so cancel it; from here the IntersectionObserver owns the hidden state.
+clearTimeout(window.__revealTimer);
 const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});},{threshold:.14,rootMargin:'0px 0px -40px 0px'});
 $$('.rv').forEach(el=>io.observe(el));
 
