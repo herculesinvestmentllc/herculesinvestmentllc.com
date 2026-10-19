@@ -70,6 +70,16 @@ test('hidden start states are scoped to html.js so content survives a failed scr
   assert.match(html, /<script src="assets\/js\/boot\.js(\?v=[0-9a-f]+)?"><\/script>/);
   const boot = await readFile(join(root, 'assets/js/boot.js'), 'utf8');
   assert.match(boot, /classList\.add\('js'\)/);
+
+  // The hidden state must have a guaranteed way out. The reveal script sits at the end
+  // of the body, so a request that hangs after boot.js runs would leave the page hidden
+  // forever. boot.js arms a timer that adds .no-anim, the CSS lifts the hidden state
+  // under it, and effects.js cancels the timer once it starts observing.
+  assert.match(boot, /setTimeout/, 'boot.js must arm a reveal failsafe');
+  assert.match(boot, /classList\.add\('no-anim'\)/, 'the failsafe must add .no-anim');
+  assert.match(css, /:where\(html\.js\.no-anim\) \.rv\{opacity:1/, '.no-anim must lift the hidden state');
+  const effects = await readFile(join(root, 'assets/js/effects.js'), 'utf8');
+  assert.match(effects, /clearTimeout\(window\.__revealTimer\)/, 'effects.js must cancel the failsafe');
 });
 
 test('every local asset reference carries a content hash', async () => {
